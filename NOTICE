@@ -1,0 +1,27 @@
+# Notice
+
+This project is part of the Tender Review system built on DesireCore.
+
+## Third-Party Dependencies
+
+### Python Standard Library
+
+DOCX extraction uses the Python standard library; optional raster geometry additionally requires Pillow as described below.
+
+Modules used: `zipfile`, `xml.etree.ElementTree`, `json`, `hashlib`, `argparse`, `codecs`, `re`, `stat`, `struct`
+
+### Runtime Platform
+
+- **DesireCore** — Agent operating system providing the tool framework, PDF Read capability, and agent coordination. DesireCore and its components are separately licensed; specific versions follow their own LICENSE. This Agent's MIT license does not re-license the platform or third-party components.
+- **Python 3.9+** — Required runtime for `extract_docx.py`.
+- **Vision-capable LLM** — Required for PDF page-image rendering and image inspection. Model selection is configured by the user; specific model names and providers are runtime configuration, not bundled dependencies.
+
+## Cloud Model Disclosure
+
+When a user selects a cloud model, text and images processed during review are handled by that model's processing channel. This project does not promise fully local processing.
+
+## No Endorsement
+
+Use of this software does not constitute a guarantee of compliance, bid acceptance, or regulatory approval. This tool provides extraction and inspection capabilities; it does not make compliance or bid-worthiness decisions.
+
+Optional local raster measurement uses Pillow 12.3.0 (MIT-CMU). See skills/tender-visual-extract/DEPENDENCIES.md and skills/tender-visual-extract/PILLOW-LICENSE.txt. Installed wheels retain their own bundled-library licenses/SBOM. Source images and measurement outputs are task data and are not distributed with this skill. The helper provides connected pixel-region geometry only; it does not provide OCR, object recognition, authenticity or tender acceptance decisions.

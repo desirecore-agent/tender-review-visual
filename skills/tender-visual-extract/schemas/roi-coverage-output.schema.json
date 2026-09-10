@@ -1,0 +1,414 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://desirecore-agent.github.io/tender-visual/roi-coverage-output.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "description": "Successful complete full-image pixel audit.",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "semantic_assessment",
+        "source",
+        "config",
+        "coordinate_system",
+        "full_image",
+        "inside_roi",
+        "outside_roi",
+        "outside_matches_present",
+        "budget",
+        "limitations"
+      ],
+      "properties": {
+        "status": {
+          "const": "audited",
+          "description": "Exact mask audit finished, not semantic acceptance."
+        },
+        "semantic_assessment": {
+          "const": "not_assessed",
+          "description": "Object interpretation remains separate."
+        },
+        "source": {
+          "type": "object",
+          "description": "Complete source identity.",
+          "additionalProperties": false,
+          "required": [
+            "sha256",
+            "bytes",
+            "width",
+            "height",
+            "format",
+            "icc_profile_present"
+          ],
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "Exact byte snapshot used for decode."
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 33554432,
+              "description": "Snapshot byte count."
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "Decoded width."
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "Decoded height."
+            },
+            "format": {
+              "enum": [
+                "PNG",
+                "JPEG"
+              ],
+              "description": "Decoder-identified format."
+            },
+            "icc_profile_present": {
+              "type": "boolean",
+              "description": "Raw decoded channels are used without ICC/gamma transform."
+            }
+          }
+        },
+        "config": {
+          "type": "object",
+          "description": "Full-image threshold coverage audit using the same seven explicit fields as region measurement; not semantic coverage.",
+          "additionalProperties": false,
+          "required": [
+            "image_path",
+            "roi",
+            "rgb_min",
+            "rgb_max",
+            "saturation_min",
+            "min_area",
+            "connectivity"
+          ],
+          "properties": {
+            "image_path": {
+              "type": "string",
+              "description": "Explicitly authorized absolute local regular PNG/JPEG file; final symlinks rejected where O_NOFOLLOW exists; parent links resolve normally.",
+              "minLength": 1
+            },
+            "roi": {
+              "type": "array",
+              "description": "[left,top,right,bottom]; right/bottom exclusive; nonempty, within image; at most 1 million pixels. Full-image effective transparency anywhere rejects this audit; unlike ROI-only measurement, no opaque-ROI exemption.",
+              "items": {
+                "type": "integer",
+                "description": "Coordinate in the decoded image",
+                "minimum": 0,
+                "maximum": 16000000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "rgb_min": {
+              "type": "array",
+              "description": "Decoded RGB lower bounds; no color management.",
+              "items": {
+                "type": "integer",
+                "description": "Inclusive channel lower bound",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "rgb_max": {
+              "type": "array",
+              "description": "Decoded RGB upper bounds; each >= matching lower bound.",
+              "items": {
+                "type": "integer",
+                "description": "Inclusive channel upper bound",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "saturation_min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Inclusive HSV S threshold: (maxRGB-minRGB)/maxRGB; black S=0."
+            },
+            "min_area": {
+              "type": "integer",
+              "description": "Retain connected regions with at least this many matched pixels; all discarded regions counted. Retained for compatibility only: this full-image pixel audit does not compute/filter connected components.",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "connectivity": {
+              "type": "integer",
+              "enum": [
+                4,
+                8
+              ],
+              "description": "4 uses shared edges; 8 also joins diagonal neighbors. Retained for compatibility only: this full-image pixel audit does not compute/filter connected components."
+            }
+          }
+        },
+        "coordinate_system": {
+          "type": "string",
+          "description": "Top-left decoded coordinate convention."
+        },
+        "full_image": {
+          "type": "object",
+          "description": "Spatial pixel summary, not semantic objects.",
+          "additionalProperties": false,
+          "required": [
+            "matched_pixels",
+            "bbox"
+          ],
+          "properties": {
+            "matched_pixels": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "Exact mask pixels, no area filtering."
+            },
+            "bbox": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 16000000,
+                    "description": "Pixel coordinate."
+                  }
+                }
+              ],
+              "description": "Exclusive-right/bottom bounding box of matching pixels, or null iff no matching pixels."
+            }
+          }
+        },
+        "inside_roi": {
+          "type": "object",
+          "description": "Spatial pixel summary, not semantic objects.",
+          "additionalProperties": false,
+          "required": [
+            "matched_pixels",
+            "bbox"
+          ],
+          "properties": {
+            "matched_pixels": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "Exact mask pixels, no area filtering."
+            },
+            "bbox": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 16000000,
+                    "description": "Pixel coordinate."
+                  }
+                }
+              ],
+              "description": "Exclusive-right/bottom bounding box of matching pixels, or null iff no matching pixels."
+            }
+          }
+        },
+        "outside_roi": {
+          "type": "object",
+          "description": "Spatial pixel summary, not semantic objects.",
+          "additionalProperties": false,
+          "required": [
+            "matched_pixels",
+            "bbox"
+          ],
+          "properties": {
+            "matched_pixels": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "Exact mask pixels, no area filtering."
+            },
+            "bbox": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 16000000,
+                    "description": "Pixel coordinate."
+                  }
+                }
+              ],
+              "description": "Exclusive-right/bottom bounding box of matching pixels, or null iff no matching pixels."
+            }
+          }
+        },
+        "outside_matches_present": {
+          "type": "boolean",
+          "description": "True iff outside_roi matched_pixels >0; does not identify omitted objects."
+        },
+        "budget": {
+          "type": "object",
+          "description": "Whole-source limits and actual scanned scope.",
+          "additionalProperties": false,
+          "required": [
+            "max_bytes",
+            "max_image_pixels",
+            "max_roi_pixels",
+            "scanned_pixels",
+            "cooperative_seconds",
+            "wall_seconds",
+            "downsampled"
+          ],
+          "properties": {
+            "max_bytes": {
+              "const": 33554432,
+              "description": "Source byte cap."
+            },
+            "max_image_pixels": {
+              "const": 16000000,
+              "description": "Decoded image cap."
+            },
+            "max_roi_pixels": {
+              "const": 1000000,
+              "description": "Original measurement-compatible ROI cap."
+            },
+            "scanned_pixels": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16000000,
+              "description": "All full-raster pixels inspected; equals width times height on success."
+            },
+            "cooperative_seconds": {
+              "const": 12,
+              "description": "Elapsed processing budget checked in loop."
+            },
+            "wall_seconds": {
+              "const": 18,
+              "description": "Parent waits at most 18 seconds for worker IPC; timeout cleanup joins at most two further seconds."
+            },
+            "downsampled": {
+              "const": false,
+              "description": "No resizing or subsampling."
+            }
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "string",
+            "description": "Mandatory interpretation limit."
+          },
+          "description": "Preserve limits when using results."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "description": "Rejected/incomplete result; no coverage counts allowed.",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "semantic_assessment",
+        "coverage",
+        "source",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "const": "rejected",
+          "description": "No complete coverage computed."
+        },
+        "semantic_assessment": {
+          "const": "not_assessed",
+          "description": "No semantic inference."
+        },
+        "coverage": {
+          "const": "unknown",
+          "description": "Never substitute zero outside pixels for failed work."
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "description": "Identity retained when available before rejection; width/height/format/profile may be absent if decode did not finish.",
+              "additionalProperties": false,
+              "required": [
+                "sha256",
+                "bytes"
+              ],
+              "properties": {
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$",
+                  "description": "Exact byte snapshot used for decode."
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 33554432,
+                  "description": "Snapshot byte count."
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16000000,
+                  "description": "Decoded width."
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 16000000,
+                  "description": "Decoded height."
+                },
+                "format": {
+                  "enum": [
+                    "PNG",
+                    "JPEG"
+                  ],
+                  "description": "Decoder-identified format."
+                },
+                "icc_profile_present": {
+                  "type": "boolean",
+                  "description": "Raw decoded channels are used without ICC/gamma transform."
+                }
+              }
+            }
+          ],
+          "description": "Snapshot identity if available; null on pre-read errors or hard-worker timeout."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Explicit rejection or timeout reason."
+        }
+      }
+    }
+  ]
+}

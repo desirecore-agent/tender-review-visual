@@ -1,0 +1,391 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://desirecore-agent.github.io/tender-visual/measurement-output.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "description": "Successful bounded measurement, not semantic validation.",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "semantic_assessment",
+        "source",
+        "coordinate_system",
+        "config",
+        "matched_pixels",
+        "total_components",
+        "retained_components",
+        "discarded_small_components",
+        "discarded_small_pixels",
+        "components",
+        "limitations",
+        "budget"
+      ],
+      "properties": {
+        "status": {
+          "const": "measured",
+          "description": "Statistics computed; does not imply image content or tender accepted."
+        },
+        "semantic_assessment": {
+          "const": "not_assessed",
+          "description": "No object interpretation, OCR or tender decision."
+        },
+        "source": {
+          "type": "object",
+          "description": "Identity and metadata of decoded source.",
+          "additionalProperties": false,
+          "required": [
+            "sha256",
+            "bytes",
+            "width",
+            "height",
+            "format",
+            "icc_profile_present"
+          ],
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "Hash of exact bounded file byte snapshot decoded."
+            },
+            "bytes": {
+              "type": "integer",
+              "description": "Byte snapshot length.",
+              "minimum": 0,
+              "maximum": 33554432
+            },
+            "width": {
+              "type": "integer",
+              "description": "Decoded raster width.",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "description": "Decoded raster height.",
+              "minimum": 1
+            },
+            "format": {
+              "enum": [
+                "PNG",
+                "JPEG"
+              ],
+              "description": "Decoder-identified file format."
+            },
+            "icc_profile_present": {
+              "type": "boolean",
+              "description": "Embedded profile present; no color transform applied."
+            }
+          }
+        },
+        "coordinate_system": {
+          "type": "string",
+          "description": "Explicit display-coordinate convention; nonidentity EXIF rejected."
+        },
+        "config": {
+          "type": "object",
+          "description": "One bounded region measurement request; no defaults or hidden threshold tuning.",
+          "additionalProperties": false,
+          "required": [
+            "image_path",
+            "roi",
+            "rgb_min",
+            "rgb_max",
+            "saturation_min",
+            "min_area",
+            "connectivity"
+          ],
+          "properties": {
+            "image_path": {
+              "type": "string",
+              "description": "Explicitly authorized absolute local regular PNG/JPEG file; final symlinks rejected where O_NOFOLLOW exists; parent links resolve normally.",
+              "minLength": 1
+            },
+            "roi": {
+              "type": "array",
+              "description": "[left,top,right,bottom]; right/bottom exclusive; nonempty, within image; at most 1 million pixels.",
+              "items": {
+                "type": "integer",
+                "description": "Coordinate in the decoded image",
+                "minimum": 0,
+                "maximum": 16000000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "rgb_min": {
+              "type": "array",
+              "description": "Decoded RGB lower bounds; no color management.",
+              "items": {
+                "type": "integer",
+                "description": "Inclusive channel lower bound",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "rgb_max": {
+              "type": "array",
+              "description": "Decoded RGB upper bounds; each >= matching lower bound.",
+              "items": {
+                "type": "integer",
+                "description": "Inclusive channel upper bound",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "saturation_min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Inclusive HSV S threshold: (maxRGB-minRGB)/maxRGB; black S=0."
+            },
+            "min_area": {
+              "type": "integer",
+              "description": "Retain connected regions with at least this many matched pixels; all discarded regions counted.",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "connectivity": {
+              "type": "integer",
+              "enum": [
+                4,
+                8
+              ],
+              "description": "4 uses shared edges; 8 also joins diagonal neighbors."
+            }
+          }
+        },
+        "matched_pixels": {
+          "type": "integer",
+          "description": "All threshold-selected ROI pixels before min-area filtering.",
+          "minimum": 0
+        },
+        "total_components": {
+          "type": "integer",
+          "description": "All connected components before area filter.",
+          "minimum": 0,
+          "maximum": 5000
+        },
+        "retained_components": {
+          "type": "integer",
+          "description": "Number of components meeting area filter.",
+          "minimum": 0,
+          "maximum": 5000
+        },
+        "discarded_small_components": {
+          "type": "integer",
+          "description": "Components below area filter.",
+          "minimum": 0
+        },
+        "discarded_small_pixels": {
+          "type": "integer",
+          "description": "Total pixels removed by area filter.",
+          "minimum": 0
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Connected threshold-mask region; never guaranteed to be one visible object.",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "bbox",
+              "area_pixels",
+              "centroid",
+              "fill_ratio",
+              "touches_roi_boundary",
+              "x_sections",
+              "y_sections"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Raster-discovery order ID, not semantic item number.",
+                "minimum": 1
+              },
+              "bbox": {
+                "type": "array",
+                "description": "Exclusive right/bottom component bounds.",
+                "items": {
+                  "type": "integer",
+                  "description": "Global raster coordinate.",
+                  "minimum": 0
+                },
+                "minItems": 4,
+                "maxItems": 4
+              },
+              "area_pixels": {
+                "type": "integer",
+                "description": "Number of matched component pixels.",
+                "minimum": 1
+              },
+              "centroid": {
+                "type": "array",
+                "description": "Mean global x,y of matched pixel centers; not an inferred object center.",
+                "items": {
+                  "type": "number",
+                  "description": "Finite raster measurement."
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "fill_ratio": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Area divided by bounding box area."
+              },
+              "touches_roi_boundary": {
+                "type": "boolean",
+                "description": "True signals possible crop or background inclusion."
+              },
+              "x_sections": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 9,
+                "items": {
+                  "type": "object",
+                  "description": "One cross section; no interpolation or gap filling.",
+                  "additionalProperties": false,
+                  "required": [
+                    "coordinate",
+                    "matched_pixels"
+                  ],
+                  "properties": {
+                    "coordinate": {
+                      "type": "integer",
+                      "description": "Global image x or y coordinate.",
+                      "minimum": 0
+                    },
+                    "matched_pixels": {
+                      "type": "integer",
+                      "description": "Matched pixels in this component on this column or row.",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "description": "Column populations at up to 9 evenly spaced integer x positions including endpoints."
+              },
+              "y_sections": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 9,
+                "items": {
+                  "type": "object",
+                  "description": "One cross section; no interpolation or gap filling.",
+                  "additionalProperties": false,
+                  "required": [
+                    "coordinate",
+                    "matched_pixels"
+                  ],
+                  "properties": {
+                    "coordinate": {
+                      "type": "integer",
+                      "description": "Global image x or y coordinate.",
+                      "minimum": 0
+                    },
+                    "matched_pixels": {
+                      "type": "integer",
+                      "description": "Matched pixels in this component on this column or row.",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "description": "Row populations at up to 9 evenly spaced integer y positions including endpoints."
+              }
+            }
+          },
+          "maxItems": 5000,
+          "description": "Retained components, no semantic object count."
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Mandatory interpretation or suitability limitation."
+          },
+          "minItems": 4,
+          "description": "Read and preserve these limitations in analysis."
+        },
+        "budget": {
+          "type": "object",
+          "description": "Hard size caps and explicit timeout limitation.",
+          "additionalProperties": false,
+          "required": [
+            "max_bytes",
+            "max_pixels",
+            "max_roi_pixels",
+            "max_components",
+            "measurement_seconds",
+            "decode_timeout_enforced"
+          ],
+          "properties": {
+            "max_bytes": {
+              "type": "integer",
+              "description": "Input byte cap.",
+              "minimum": 0
+            },
+            "max_pixels": {
+              "type": "integer",
+              "description": "Whole-image decoded pixel cap.",
+              "minimum": 0
+            },
+            "max_roi_pixels": {
+              "type": "integer",
+              "description": "Mask pixel cap.",
+              "minimum": 0
+            },
+            "max_components": {
+              "type": "integer",
+              "description": "Component traversal cap.",
+              "minimum": 0
+            },
+            "measurement_seconds": {
+              "type": "integer",
+              "description": "Cooperative processing deadline; includes elapsed decoding time.",
+              "minimum": 0
+            },
+            "decode_timeout_enforced": {
+              "const": false,
+              "description": "Native decoder cannot be interrupted by cooperative checks; caller must apply an execution timeout."
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "description": "Rejected request or input.",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "semantic_assessment",
+        "reason",
+        "components"
+      ],
+      "properties": {
+        "status": {
+          "const": "rejected",
+          "description": "No usable measurement produced."
+        },
+        "semantic_assessment": {
+          "const": "not_assessed",
+          "description": "No inference is permitted from rejected input."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Rejection reason; report as incomplete."
+        },
+        "components": {
+          "type": "array",
+          "maxItems": 0,
+          "description": "Always empty on rejection."
+        }
+      }
+    }
+  ]
+}
