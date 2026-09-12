@@ -1,20 +1,37 @@
 ---
 name: tender-visual-extract
-description: "Technical image/document extraction review skill: secure DOCX extraction (text/tables/embedded images/relationships, with path traversal and ZIP bomb protection), PDF capability check and page-image inspection discipline (only counted as viewed after actual Read). Used for structured extraction and image evidence recording in tender document review. Includes bounded local pixel-region measurements."
+version: "0.2.0"
+description: Find visible issues in images, scans and diagrams that matter to the tender requirements.
 ---
 
-# Technical Image / Document Extraction Review
+# Visual technical review
 
-## Receiving a delegated business task
+## Outcome and acceptance
 
-For a received business delegation or delegated correction, actually load this installed Skill and inspect the complete original request and TaskSpec in the current verified file-backed delegation body, with their file identities. This supplied content does not require a redundant tool Read. If it is absent, actually Read the explicitly authorized original files; missing content or identities blocks business. Never report a tool Read that did not occur. Actual business documents/images must still be read using real tools. Verify their supplied full hashes, task/revision, applicable constraints, output ownership and the actual current preflight receipt. A summary or previous installation check is insufficient. Missing, unavailable, mismatched or unsatisfied bindings mean blocked/unverified before business work; request correction without widening scope. Use only the task-required reviewed helpers and this role's verified environment; do not install substitutes, write runtimes under Agent source, or borrow another role's interpreter. Report real Read/Skill and execution evidence, including failures. Direct non-delegated user requests follow the existing authorized workflow; this TaskSpec reception condition applies only to delegations. The published finite metadata-preflight bootstrap remains nonrecursive and does not authorize business work.
+Find visible issues in images, scans and diagrams that matter to the tender requirements.
 
-Runtime location (conditional): apply the following discovery and receipt checks only when the current task explicitly depends on an initialized and verified role-owned environment. A text-only task with no such dependency does not require a runtime receipt and must not be blocked solely because none exists. This does not waive any applicable installed Skill requirement to use its formal helper or validator in a verified environment; resolve a missing required binding before that execution. When this condition applies, confirm the current ToolCatalog parameters, then use read-only `ManageWorkDirs({"action":"list","scope":"current"})`; do not switch cwd, add grants or query other Agents/global scope. The list may include merged team/global directories: do not select those, or infer private ownership from primary/cwd/parent paths. If no unambiguous own private workspace is identifiable, stop. Team cwd is not the role's private workspace, and Managed runtimes base Python is not its existing venv. In an unambiguously role-owned registered private workspace, read `.runtime/<skill-name>/runtime-receipt.md` (substitute this Skill's name) or an exact current initialization receipt authorized by this task. Its real initialization owner records non-secret actual interpreter/prefix, helper/lock hashes, versions and verification evidence; existing environments are not moved. The Markdown receipt is immutable after creation; a later initialization uses a new explicitly supplied path/hash rather than overwriting it. The member provides the exact receipt binding through actual authorized delivery; no caller guesses it or silently scans alternatives. Verify these against current task bindings; a receipt grants no access and is not proof of readiness. Missing directory/receipt/identity means blocked pending exact bindings, never old-case/history search or a substitute pip install.
+**Good:** Actually view assigned visual material. Locate observations by file, page and region; distinguish visible fact, interpretation and uncertainty. Compare relevant requirements and text, preserve conflicts and identify the exact material needed to resolve them.
+
+**Not good:** Guessing from filenames or OCR; treating blurred text as noncompliance or absence; inventing detail after enlargement; authenticating a seal from appearance; claiming all images reviewed after reading only PDF text.
+
+**Example:** If the port diagram clearly shows four ports while the technical table says six, cite both and flag the discrepancy. If the diagram is unreadable, request a clearer image rather than claiming four ports.
+
+Assess material omissions, false positives, source-location correctness and actionability. These are quality criteria, not a quota of findings. A clean result needs an explanation of what was examined; an incomplete result identifies the exact gap and its effect. No accuracy percentage is claimed without an evaluated sample set.
+
+## Assignment and delivery
+
+Accept a clear natural-language assignment describing background, objective, available materials, authorized scope, quality expectations and delivery destination. Choose reading order, tools and presentation autonomously. Ask only about ambiguities that change the answer; continue independent checks with available material. No business input schema, metadata preflight or runtime receipt is required to begin.
+
+Deliver a usable professional conclusion, supporting locations, recommended actions and remaining limitations. Markdown, a table, a direct substantive reply or requested files are all valid; no fixed file count or six-artifact pack is required. If a file is requested, create it and check it is readable before reporting delivery. Reading and planning alone are not completion. On interruption, continue from usable work, identify gaps and deliver the completed portion honestly. For targeted rework, answer the specific concern and explain any changed conclusion. The lead accepts the substantive work; independent Evidence review is not self-certified.
+
+## Optional tool reference below
+
+Select the following methods as needed for the materials and conclusion. A calculation or measurement script's input/output constraints apply only when that script is used; every business task need not execute every tool. Check the actual capabilities and dependencies needed by the chosen method.
 
 ## Use Cases
 
 - Safely extract paragraph text, tables (with row/column positioning), embedded images and their relationship references from DOCX files
-- Perform PDF capability checks and page-image inspection (unknown installations must verify with ToolCatalog + a real non-sensitive smoke PDF first)
+Use the available tools directly for the assigned material. If a concrete reading or rendering failure needs diagnosis, inspect tool parameters and optionally use a small non-sensitive sample. A smoke test is not a first-use or task-admission requirement; report actual capability limits.
 - Actually inspect extracted images and record evidence
 
 ## Core Principles
@@ -23,7 +40,7 @@ Runtime location (conditional): apply the following discovery and receipt checks
 2. **Blurry / missing page / read failure ≠ "not provided" or "check passed"**: Always record as incomplete with the reason.
 3. **No seal/signature authenticity verification**: Visual inspection reports visibility (present/absent/illegible), never authenticity.
 4. **Image-text contradictions preserved side by side**: Never choose "which one to trust" on your own.
-5. **An image is only counted as viewed after actual Read**: Never claim to have inspected a file not opened with the `Read` tool.
+5. **An image is counted as viewed after actual visual inspection**: Never claim to have inspected an image without actually seeing it.
 6. **Partial extraction never claims full success**: When `status` is `partial`/`rejected`, incomplete items must be truthfully reported.
 7. **DOCX extraction ≠ full Office rendering**: `extract_docx.py` only extracts body paragraphs, tables, and images referenced via drawing elements; headers, footers, footnotes, endnotes, comments, embedded OLE objects are not covered.
 8. **Cloud model channel disclosure**: When using a user-selected cloud model, text and images sent for processing are handled by that model's channel; fully local processing cannot be promised.
@@ -110,7 +127,7 @@ python3 <skill_dir>/scripts/extract_docx.py INPUT.docx --out-dir OUTPUT_DIR
 
 See `pdf-capability-check.md` (relative to this skill directory).
 
-> **Note**: The capabilities below are based on a development environment smoke test. Unknown installations must first use ToolCatalog to read tool parameters + run a real non-sensitive smoke PDF verification; do not claim "all previous releases support this."
+Use the available tools directly for the assigned material. If a concrete reading or rendering failure needs diagnosis, inspect tool parameters and optionally use a small non-sensitive sample. A smoke test is not a first-use or task-admission requirement; report actual capability limits.
 
 ### Two Read Modes
 
@@ -138,7 +155,7 @@ See `pdf-capability-check.md` (relative to this skill directory).
 
 ## Image Inspection Discipline
 
-1. Every image requiring review must be actually opened with the `Read` tool
+1. Every image requiring review must actually be viewed using an available image tool or visible UI
 2. Recording format: `[Viewed] <file path> — <observation summary>`
 3. When illegible: `[Illegible] <file path> — <reason>` (readability tagged `illegible`, counted as incomplete)
 4. Not yet inspected: `[Not inspected] <file path>`
@@ -148,8 +165,8 @@ See `pdf-capability-check.md` (relative to this skill directory).
 
 1. **Size gate (too_small)**: When extracted image width or height **≤ threshold** (default 10 pixels, i.e., minimum acceptable size is 11, aligned with confirmed model boundary "width and height must be >10"; script parameter `--min-image-side` adjustable, must be ≥1), JSON tags `readability=too_small`. Such images **must not be sent to vision models** (model vision APIs generally require width/height >~10 pixels; a 1×1 image triggers 400), **must not count as "effectively viewed"**, must remain in the planned/reference and acceptance denominator, and must not count in the effectively viewed/completed numerator; always record as unchecked/incomplete with reason. The same denominator rule applies to illegible and unviewed images. Any legitimate scope exclusion needs a separate, explicit and evidenced reason; small dimensions alone cannot justify exclusion.
 2. **Illegible**: When content is unreadable after Read (blurry, too dark, render artifacts, etc.), tag `illegible`, count as incomplete; do not mask as "pending confirmation" or treat as "not provided" or "check passed".
-3. **Unknown dimensions**: When format is unrecognized or dimensions cannot be probed, tag `unknown_dimensions`, also not passing; requires manual/other confirmation or records as incomplete.
-4. **Passing the size gate only means Read may be attempted, not visual acceptance**: Images that pass the size gate still require actual Read with human confirmation of legibility to count as inspected; header parsing alone does not constitute visual acceptance.
+3. **Unknown dimensions**: Use an available viewing method to assess the content; report a gap only when actual viewing or interpretation is unavailable.
+4. **Dimensions are not visual evidence**: After actually viewing the image, the Agent judges legibility itself. Seek clearer material or human help only for actual illegibility or a needed fact. Header parsing does not replace viewing.
 5. **Do not create details via enlargement**: For low-resolution images, do not upscale, sharpen, or speculate to produce non-existent text, numbers, seals, or graphic details; record only what is actually visible.
 6. **No default external transmission**: Extracted images are used only within the local review chain by default; without user/delegator authorization, images are not sent to external services or written into external deliverables.
 7. **No authenticity checks**: Size and readability checks only prove "can/cannot see" and "what is seen," not that seals, signatures, or certificates are genuinely valid.
@@ -170,7 +187,7 @@ These rules apply after initial observation to catch common visual misreadings. 
 
 4. **File metadata accuracy**: Byte counts and SHA-256 hashes in reports **must** be computed by actual file-system tools (e.g., `shasum`, `stat`) during the current run. Never quote metadata from memory, prior reports, or other agents' outputs.
 
-5. **Evidence grounding**: Every visual conclusion (short code, shape count, chart trend, rotation) must be traceable to a specific `Read` tool invocation that returned an `ImageContent` result. When a previous observation is disputed or suspect, **re-render the specific page** with `pdf_mode="render"` and re-inspect the fresh image — do not defer to the original observation.
+5. **Evidence grounding**: Locate conclusions in the file, page or region actually viewed. Read, another available image tool or visible UI may provide real viewing. Revisit disputed observations using an appropriate method rather than relying on the old claim.
 
 ## Dependencies
 
@@ -195,25 +212,21 @@ Hard limits: source 32 MiB; whole image 16 million pixels; ROI 1 million pixels;
 ### Measurement evidence and version-binding requirements
 
 1. **Full request and result preservation**: For every `measure_regions.py` invocation, persist three separate files: (a) the exact JSON request body, (b) the complete untruncated stdout (the measurement JSON), and (c) stderr and exit code. Never print only a slice, never discard stderr on success, and never omit a non-zero exit code from the record.
-2. **Exported image version binding**: After `ExportMedia` produces a local JPEG/PNG, **actually `Read` that exact file** before using it as a measurement source. This binds the exported path, byte length, and SHA-256 to the version you inspected. Do not assume a cache hit, skip the Read, or match by filename alone.
+2. **Export version correspondence**: Measurements must correspond to the image version actually viewed. Any real viewing tool may establish this correspondence; filenames alone do not.
 3. **Per-object discrepancy investigation**: When the visual object count and `retained_components` disagree, investigate each visual object individually: (a) is it fully within the ROI? (b) was its color captured by the RGB/HSV thresholds? (c) was it filtered out by `min_area`? (d) did it merge with a neighbor via connectivity? (e) did it fragment into multiple components? Record the status of each object. Do not attribute the mismatch to a single unverified cause (e.g. "likely merged") without examining the evidence.
 4. **Unresolved discrepancies are incomplete**: Any count or ranking difference that remains unexplained after the per-object check must be recorded as **incomplete** (`[未验证]`/`[unverified]`). Do not close the discrepancy by asserting "visual priority" or "measurement priority" — both are hypotheses until the per-object investigation resolves them. The incomplete item stays in the denominator.
 5. **No sample-specific content**: These rules are generic. Do not embed example ROIs, thresholds, correct answers, or specific hash values into the skill documentation.
 
 ### Evidence required for geometric conclusions
 
-Quantified conclusions about counts, relative extents, bar rankings or tip geometry require an actual measurement and an explicit mapping of ROI, thresholds, components and sections to semantic objects in the same image version. Without pixel results or a clear object mapping, report unknown; never equate connected-region count with depicted item count. When measurements contradict an earlier observation, preserve both, re-view the exact version and check threshold/segmentation suitability. Until resolved, silently retaining the old observation or automatically adopting the measurement is prohibited. Rotated text, chart values and unsuitable segmentation still require their own visual/text evidence; this helper does not invent answers.
+Use direct visual observation when counts or relationships are clear. Use measurement when ambiguity or required precision warrants it, with an explicit mapping from pixels to visible objects. Never equate connected regions with semantic items. If measurement conflicts with observation, re-view the exact image and investigate segmentation before concluding; keep unresolved discrepancies uncertain. The helper does not interpret rotated text or invent chart values.
 
 For PDF local page images, follow the [export chain](pdf-capability-check.md) and [runtime setup](DEPENDENCIES.md).
 
 ## Full-raster coverage before whole-figure geometry
 
-Before treating a local ROI's measurements as evidence about a whole figure, run the supervised `scripts/audit_roi_coverage.py` CLI with the same exact image identity and seven-field RGB/HSV request. Read [coverage usage](USAGE.md) and its two schemas first. Preserve request/full stdout/stderr/exit separately in the registered private workspace. Its new files are additive; the reviewed region helper and locked Pillow dependency stay unchanged.
+Before extending local measurements to a whole-figure conclusion, account for cropping, omissions and overlap. Choose full-image viewing, wider regions or coverage auditing as appropriate. `scripts/audit_roi_coverage.py` is optional; follow [its instructions](USAGE.md) and parameter constraints when selected.
 
 Inspect outside-ROI matches against the actual image. Widen or explicitly tile ROIs when justified and reconcile object identities, clipping and overlap before quantifying the whole figure. Outside pixels can be objects, axes, labels or background. Outside=0 concerns only the submitted threshold, never semantic completeness. Count/ordering discrepancies stay unknown/incomplete in the denominator until explained; neither geometry nor earlier visual guesses automatically prevails.
 
 A full-image transparency, decode, size, scan-time or worker-timeout rejection means coverage unknown. Never replace it with zero outside matches or reuse a successful result from another image/threshold. The stricter full-image alpha check does not remove the original helper's ability to measure an opaque ROI, but such local measurements cannot establish full-image coverage.
-
-## Candidate file-backed delegation input
-
-After the platform capability is released and verified, use the [input preparation guide](delegation-input.md). Received delegated input is the complete `tender-delegation-input/v1` JSON document. Its `original_request.text` preserves the exact original request; `task_spec.value` preserves the full parsed Spec, while its SHA binds the original file bytes, not JSON reserialization. The new structural gate does not replace the original TaskSpec checker, source comparison, actual Skill execution, or independently verified receipts. Missing or mismatched evidence still blocks affected business work. Direct human maintenance requests remain outside this delegated-input contract.

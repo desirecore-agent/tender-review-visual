@@ -2,7 +2,7 @@
 
 ## Current Status (2026-08-31)
 
-The capabilities below are based on a development environment smoke test. **Unknown installations must first use ToolCatalog to read tool parameters + run a real non-sensitive smoke PDF verification; do not claim "all previous releases support this."**
+Use the available tools directly for the assigned material. If a concrete reading or rendering failure needs diagnosis, inspect tool parameters and optionally use a small non-sensitive sample. A smoke test is not a first-use or task-admission requirement; report actual capability limits.
 
 The platform PDF reading tool (Read) supports two modes:
 
@@ -18,7 +18,7 @@ The platform PDF reading tool (Read) supports two modes:
 | Text-layer extraction | ✅ Verified | Default Read mode reads text layer directly |
 | Page-image rendering | ✅ Verified | `pdf_mode="render"` + explicit `pages`; model must support vision |
 
-> **Not in scope of this verification**: OCR indexing. No standalone OCR tool or mode exists in the current tool definition; OCR availability cannot be inferred from text-extraction parameters. Only declare OCR capability when the installation explicitly provides an OCR tool and it has been smoke-tested.
+> OCR differs from text-layer extraction; establish its availability from actual tools and results. Ordinary visual tasks require no prior OCR smoke test.
 
 ## Usage Constraints
 
@@ -26,7 +26,7 @@ The platform PDF reading tool (Read) supports two modes:
 
 - Page-image mode requires a **vision-capable model**.
 - On a **fixed non-vision or unknown-capability model, `render` fails** — it does not "skip images and return text." Behavior must be confirmed from the actual tool response; Smart-routed vision selection must also be verified from real responses.
-- When uncertain about vision support, a 1-page smoke test with `pdf_mode="render"` verifies the capability.
+- A single-page diagnostic may help after a concrete rendering failure; otherwise work directly on assigned material.
 
 ### Page & Budget Limits
 
