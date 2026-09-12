@@ -8,7 +8,7 @@
 -m pip install --index-url https://pypi.org/simple --only-binary=:all: --require-hashes -r requirements-geometry.lock
 ```
 
-明确授权的依赖安装会访问官方包基础设施，测量本身离线。锁文件包含官方 12.3.0 PyPI JSON 的 86 个未撤销 wheel 的 SHA-256，不含源码包，也无传递 Python 包依赖。解释器/平台不匹配时安装失败。检查 Pillow 版本，再用非敏感本地图片真实冒烟后才能宣称就绪。不要发布环境，也不要把凭据或运行时路径复制进技能。
+明确授权的依赖安装会访问官方包基础设施，测量本身离线。锁文件包含官方 12.3.0 PyPI JSON 的 86 个未撤销 wheel 的 SHA-256，不含源码包，也无传递 Python 包依赖。解释器/平台不匹配时安装失败。选择该可选工具时检查所需依赖；仅在具体执行故障需要诊断时使用非敏感小样本，不要求事先冒烟。不要发布环境，也不要把凭据或运行时路径复制进技能。
 
 Pillow 许可表达式为 MIT-CMU，须保留上游许可声明。二进制 wheel 可能包含另有许可的图像库，需保留 wheel 的许可文件和内嵌 SBOM。`PILLOW-LICENSE.txt` 保留上游 Pillow 许可，不替代 wheel 自带声明。未来升级前重新检查依赖安全公告，精确锁、独立 review 和冒烟一起更新。
 

@@ -8,7 +8,7 @@ Create a private virtual environment in this Agent's own workspace using its con
 -m pip install --index-url https://pypi.org/simple --only-binary=:all: --require-hashes -r requirements-geometry.lock
 ```
 
-This explicitly authorized dependency installation accesses official package infrastructure; measurement itself is offline. The lock contains 86 non-yanked wheel SHA-256 hashes from the official 12.3.0 PyPI JSON, no source distributions and no transitive Python packages. Unsupported interpreter/platform combinations fail installation. Check installed Pillow version, then run a non-sensitive local image smoke measurement before claiming readiness. Do not publish the environment or copy credentials/runtime paths into the skill.
+This explicitly authorized dependency installation accesses official package infrastructure; measurement itself is offline. The lock contains 86 non-yanked wheel SHA-256 hashes from the official 12.3.0 PyPI JSON, no source distributions and no transitive Python packages. Unsupported interpreter/platform combinations fail installation. Check dependencies when this optional helper is selected. Use a small non-sensitive diagnostic only to investigate a concrete execution failure; no prior smoke run is required. Do not publish the environment or copy credentials/runtime paths into the skill.
 
 Pillow's license expression is MIT-CMU. Preserve its supplied license notices. Binary wheels may bundle separately licensed image libraries; retain wheel license files and the embedded SBOM. `PILLOW-LICENSE.txt` preserves the upstream Pillow license; it is not a replacement for wheel notices. Review dependency security advisories before a future upgrade and regenerate the exact lock, review and smoke test together.
 

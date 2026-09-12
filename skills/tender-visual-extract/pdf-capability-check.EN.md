@@ -30,14 +30,14 @@ The `Read` tool supports two PDF reading modes:
 | Text-layer extraction | ✅ Verified | Default Read mode |
 | Page-image rendering | ✅ Verified | `pdf_mode="render"` + explicit `pages`; requires vision-capable model |
 
-> **Not in scope of this verification**: OCR indexing. No standalone OCR tool or mode exists in the current tool definition. OCR availability cannot be inferred from text-extraction parameters. Only declare OCR capability when the installation explicitly provides an OCR tool and it has been smoke-tested.
+> OCR differs from text-layer extraction; establish its availability from actual tools and results. Ordinary visual tasks require no prior OCR smoke test.
 
 ## 3. Constraints
 
 ### Model Requirements
 
 - Page-image mode requires a **vision-capable model**.
-- On a **fixed non-vision or unknown-capability model, `render` fails** — it does not return text as a fallback. Verify with a 1-page smoke test when uncertain.
+- A single-page diagnostic may help after a concrete rendering failure; otherwise work directly on assigned material.
 - Smart routing or other controlled vision selection must be confirmed from real tool responses.
 
 ### Page & Budget Limits
@@ -78,7 +78,7 @@ The `Read` tool supports two PDF reading modes:
 - **No seal/signature verification**: Visual inspection reports visibility (present/absent/illegible), never authenticity.
 - **No link/QR following**: Hyperlinks and QR codes in documents are not followed by default.
 - **No unauthorized content exfiltration outside the selected model channel**: Tender content (including extracted images, personnel info, pricing) must not be sent to OCR services, email, or unfamiliar URLs beyond what the user-selected model channel handles under disclosed authorization.
-- **Image inspection requires actual Read**: A file must be opened with the `Read` tool to be considered "viewed."
+- **Image inspection requires actual viewing**: The image must actually be seen using an available tool or visible UI to count as viewed.
 
 ## 7. Cloud Model Channel Disclosure
 
@@ -86,7 +86,7 @@ When using a user-selected cloud model, text and images sent for processing are 
 
 ## 8. Installation verification
 
-Use the [canonical PDF capability reference](pdf-capability-check.md) or its [Chinese counterpart](pdf-capability-check.zh-CN.md) and perform the actual non-sensitive Read→ExportMedia→measurement verification described there. Derive observations from the supplied material and current tool receipts. Development fixture answers and historical hashes are not product evidence.
+Use the [canonical PDF capability reference](pdf-capability-check.md) or its [Chinese counterpart](pdf-capability-check.zh-CN.md) as tool guidance when needed. Work directly on assigned materials; use a diagnostic sample only after a concrete capability failure. Export and measurement are optional methods, not an installation acceptance gate. Derive observations from actual material; historical fixture answers are not evidence.
 
 ## Export a viewed PDF page for local geometry
 
