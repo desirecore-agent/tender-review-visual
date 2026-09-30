@@ -1,6 +1,6 @@
 {
   "$schema": "https://desirecore.net/schemas/agentfs/v1/agent-config.json",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "llm": {
     "routingMode": "fixed",
     "smart": {
@@ -41,5 +41,12 @@
   "max_concurrent_sessions": 3,
   "id": "80a96e4c-a48a-403d-a1cd-12a0a1406704",
   "name": "技术图片审查员",
-  "description": "技术图片审查员：实际读取PDF页图及图片、DOCX配图；定位可辨识内容、明确模糊区域"
+  "description": "技术图片审查员：实际读取PDF页图及图片、DOCX配图；定位可辨识内容、明确模糊区域",
+  "avatar": {
+    "char": "技",
+    "color": "blue",
+    "image": {
+      "path": "assets/avatar.webp"
+    }
+  }
 }
